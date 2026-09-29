@@ -98,22 +98,81 @@ int validateEmail(char email[])
 void listContacts(AddressBook *addressBook, int sortCriteria) 
 {
     // Sort contacts based on the choosen criteria
-    int criteria;
-    printf("Sort based on :\n1.Name\n2.Phone\n3.email\n");
-    scanf("%d",&criteria);
-    /*
-    if 1
-       sort based on Name
-    if 2
-       sort based on Phone
-    if 3
-       sort based on email
-    */
-    for(int i=0;i < addressBook -> contactCount; i++)
+    //int sortCriteria;
+    printf("Sort based on :\n1.Name\n2.Phone\n3.email\nAny number Back to menu except 1,2 and 3\n");
+    scanf("%d",&sortCriteria);
+    switch(sortCriteria)
     {
-        printf("%s\t%s\t%s\n",addressBook->contacts[i].name, addressBook->contacts[i].phone, addressBook->contacts[i].email);
+        case 1:
+        {
+            for(int i=0;i<addressBook->contactCount-1;i++)
+            {
+                for(int j=i+1;j<addressBook->contactCount;j++)
+                {
+                    if(strcmp(addressBook->contacts[i].name,addressBook->contacts[j].name) > 0)
+                    {
+                        Contact temp = addressBook->contacts[i];
+                        addressBook->contacts[i] = addressBook->contacts[j];
+                        addressBook->contacts[j] = temp;
+                    }
+                }
+            }
+            printf("All the details in the order of NAMES:\n");
+            for(int i=0;i < addressBook -> contactCount; i++)
+            {
+                printf("%s\t%s\t%s\n",addressBook->contacts[i].name, addressBook->contacts[i].phone, addressBook->contacts[i].email);
+            } 
+        }
+        break;
+        case 2:
+        {
+            for(int i=0;i<addressBook->contactCount-1;i++)
+            {
+                for(int j=i+1;j<addressBook->contactCount;j++)
+                {
+                    if(strcmp(addressBook->contacts[i].phone,addressBook->contacts[j].phone) > 0)
+                    {
+                        Contact temp = addressBook->contacts[i];
+                        addressBook->contacts[i] = addressBook->contacts[j];
+                        addressBook->contacts[j] = temp;
+                    }
+                }
+            }
+            printf("All the details in the order of Ph No.:\n");
+            for(int i=0;i < addressBook -> contactCount; i++)
+            {
+                printf("%s\t%s\t%s\n",addressBook->contacts[i].phone, addressBook->contacts[i].name, addressBook->contacts[i].email);
+            } 
+        }
+        break;
+        case 3:
+        {
+            for(int i=0;i<addressBook->contactCount-1;i++)
+            {
+                for(int j=i+1;j<addressBook->contactCount;j++)
+                {
+                    if(strcmp(addressBook->contacts[i].email,addressBook->contacts[j].email) > 0)
+                    {
+                        Contact temp = addressBook->contacts[i];
+                        addressBook->contacts[i] = addressBook->contacts[j];
+                        addressBook->contacts[j] = temp;
+                    }
+                }
+            }
+            printf("All the details in the order of email:\n");
+            for(int i=0;i < addressBook -> contactCount; i++)
+            {
+                printf("%s\t%s\t%s\n",addressBook->contacts[i].email, addressBook->contacts[i].name, addressBook->contacts[i].phone);
+            } 
+        }
+        break;
+        default:
+        printf("Back to menu\n");
         
-    }   
+    }
+
+  
+      
 }
 
 void initialize(AddressBook *addressBook) {
@@ -333,6 +392,7 @@ void searchContact(AddressBook *addressBook)
 void editContact(AddressBook *addressBook)
 {
 	/* Define the logic for Editcontact */
+
     
 }
 
