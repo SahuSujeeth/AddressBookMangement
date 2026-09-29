@@ -38,7 +38,7 @@ int main() {
                 break;
             case 6:
                 printf("Saving...\n");
-                //saveContactsToFile(&addressBook);
+                saveContactsToFile(&addressBook);
                 break;   
             case 7:
                 printf("Exiting...\n");
