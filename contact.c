@@ -59,7 +59,7 @@ int validateEmail(char email[])
     {
         if(email[i] >= 'A' && email[i] <= 'Z')
         {
-            mailValidate = 0;
+            return 0;
             break;
         }
         i++;
@@ -68,7 +68,7 @@ int validateEmail(char email[])
     //This is for the first index should not @ - 2
     if(email[0] == '@')
     {
-        mailValidate = 0;
+        return 0;
     }
 
     //This is for the last 4 characters should be the .com - 3
@@ -76,7 +76,7 @@ int validateEmail(char email[])
     char *result = strstr(email,".com");
     if(result == NULL || result != email + lenght_mail - 4)
     {
-        mailValidate = 0;    
+        return 0;    
     }
 
     //This is for the must contain only one @. - 4
@@ -84,13 +84,23 @@ int validateEmail(char email[])
     char *lastAt = strrchr(email,'@');
     if(firstAt == NULL || firstAt != lastAt)
     {
-        mailValidate = 0;
+        return 0;
     }
 
     //This is for the atleast contain one character in between the @ and . - 5
     if(firstAt != NULL && firstAt + 1 >= email + lenght_mail - 4)
     {
-        mailValidate = 0;
+        return 0;
+    }
+
+    //Starting char should be an alnum
+    if(email[0] >= 'a' && email[0] <= 'z')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
     }
     return mailValidate;
 }
@@ -191,57 +201,113 @@ void saveAndExit(AddressBook *addressBook) {
 void createContact(AddressBook *addressBook)
 {
 	/* Define the logic to create a Contacts */
-
-    //FOR THE NAME
-    while(1)
+    if(addressBook->contactCount == MAX_CONTACTS)
     {
-       printf("Enter the Name:");
-       scanf(" %[^\n]",addressBook->contacts[addressBook->contactCount].name);
-       if(validateName(addressBook->contacts[addressBook->contactCount].name))
-       {
-          break;
-       }
-       else
-       {
-          printf("Name is invalid, Please valid name!\n");
-       }
+        printf("Address Book if full!, You can't add, To add delete few contacts\nThank You!!\n");
+        return;
     }
-
-    //FOR THE PHONE NUMBER
-    while(1)
-    {
-        printf("Enter the Phone Number:");
-        scanf("%s",addressBook->contacts[addressBook->contactCount].phone);
-        if(validatePhone(addressBook->contacts[addressBook->contactCount].phone))
+    else
+    {   
+        //FOR THE NAME
+        while(1)
         {
-            break;
+            printf("Enter the Name:");
+            scanf(" %[^\n]",addressBook->contacts[addressBook->contactCount].name);
+            if(validateName(addressBook->contacts[addressBook->contactCount].name))
+            {
+                break;
+            }
+            else
+            {
+                printf("Name is invalid, Please valid name!\n");
+            }
         }
-        else
-        {
-           printf("Phone number  is invalid, Please valid number!\n");
-        }
-    }
 
-    //FOR THE MAIL NOW 
-    while(1)
-    {
-        printf("Enter mail id:");
-        scanf("%s",addressBook->contacts[addressBook->contactCount].email);
-
-        if(validateEmail(addressBook->contacts[addressBook->contactCount].email))
+        //FOR THE PHONE NUMBER
+        while(1)
         {
-            printf("Contact Name : %s\n",addressBook->contacts[addressBook->contactCount].name);
-            printf("Phone Number : %s\n",addressBook->contacts[addressBook->contactCount].phone);
-            printf("Email Id : %s\n",addressBook->contacts[addressBook->contactCount].email);
-            addressBook->contactCount++;
-            break;
-        }
-        else
-        {
-            printf("Invalid mail!!\n");
+            int phoneNoFound;
+            printf("Enter the Phone Number:");
+            scanf("%s",addressBook->contacts[addressBook->contactCount].phone);
+            for(int i=0;i<addressBook->contactCount;i++)
+            {
+                if(strcmp(addressBook->contacts[i].phone,addressBook->contacts[addressBook->contactCount].phone) == 0)
+                {
+                    phoneNoFound = 1;
+                    break;
+                }
+                else
+                { 
+                    phoneNoFound = 0;
+                
+                }
+            }
+            if(phoneNoFound == 1)
+            {
+                printf("Phone number is already exit!! Please give different Number\n");
             
+            }
+            else
+            {
+                if(validatePhone(addressBook->contacts[addressBook->contactCount].phone))
+                {
+                    break;
+                }
+                else
+                {
+                 printf("Phone number  is invalid, Please valid number!\n");
+                }
+            }
+        
         }
+    
+        //FOR THE MAIL NOW 
+        while(1)
+        {
+            int emailFound;
+            printf("Enter mail id:");
+            scanf("%s",addressBook->contacts[addressBook->contactCount].email);
+            for(int i=0;i<addressBook->contactCount;i++)
+            {
+                if(strcmp(addressBook->contacts[i].email,addressBook->contacts[addressBook->contactCount].email) == 0)
+                {
+                    emailFound = 1;
+                    break;
+                }
+                else
+                { 
+                    emailFound = 0;
+                
+                }
+            }
+            if(emailFound == 1)
+            {
+                printf("Email is already exit!! Please give different email\n");
+
+            }
+            else
+            {
+                if(validateEmail(addressBook->contacts[addressBook->contactCount].email))
+                {
+                    printf("Contact Name : %s\n",addressBook->contacts[addressBook->contactCount].name);
+                    printf("Phone Number : %s\n",addressBook->contacts[addressBook->contactCount].phone);
+                    printf("Email Id : %s\n",addressBook->contacts[addressBook->contactCount].email);
+                    printf("Account Sucessfully Created!!\n");
+                    addressBook->contactCount++;
+                    break;
+                }
+                else
+                {
+                    printf("Invalid mail!!, Please enter valid mail!!\n");
+            
+                }
+            }
+        
+        }
+
     }
+
+    
 }
 
 void searchContact(AddressBook *addressBook) 
@@ -250,7 +316,7 @@ void searchContact(AddressBook *addressBook)
     //printf("%d\n",addressBook->contactCount);
     
     int choice;
-    printf("Search  based on :\n1.Name\n2.Phone\n3.email\nBack to menu type any number except 1,2 and 3");
+    printf("Search  based on :\n1.Name\n2.Phone\n3.email\nBack to menu type any number except 1,2 and 3\n");
     scanf("%d",&choice);
     switch(choice)
     {
@@ -266,7 +332,7 @@ void searchContact(AddressBook *addressBook)
                 int found = 0;
                for(int i=0; i<addressBook->contactCount ; i++)
                {
-                   if(strstr(addressBook->contacts[i].name,searchName) != NULL)
+                   if(strcasestr(addressBook->contacts[i].name,searchName) != NULL)
                    {
                         matchIndex[matchCount] = i;
                         matchCount++;
@@ -732,7 +798,7 @@ void deleteContact(AddressBook *addressBook)
 
 	/* Define the logic for deletecontact */
     int choice;
-    printf("Search  based on :\n1.Name\n2.Phone\n3.email\nBack to menu type any number except 1,2 and 3");
+    printf("Search  based on :\n1.Name\n2.Phone\n3.email\nBack to menu type any number except 1,2 and 3\n");
     scanf("%d",&choice);
     switch(choice)
     {
@@ -769,7 +835,7 @@ void deleteContact(AddressBook *addressBook)
                        printf("%d. %s\t%s\t%s\n",i+1,addressBook->contacts[index].name,addressBook->contacts[index].phone,addressBook->contacts[index].email);  
                     }
                     int serailNumber;
-                    printf("Select the serailNumber which you wnat to see:");
+                    printf("Select the serailNumber which you want to delete:");
                     scanf("%d",&serailNumber);
                     if(serailNumber >= 1 && serailNumber <= matchCount)
                     {
